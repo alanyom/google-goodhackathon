@@ -1,0 +1,54 @@
+# Gemma Kinetic
+
+A voice-controlled robot arm assistant for people who are blind, elderly, or physically impaired. Speak a command into your phone and the robot arm does it — no hands or screen required.
+
+Built for the **Gemma 4 Good Hackathon** (llama.cpp track + Health & Sciences track).
+
+---
+
+## Pipeline
+
+```
+iPhone (voice) → speech_to_text → Gemma 4 E2B via llama.cpp (GCP T4) → JSON → Flask server → ACT VLA policy → LeRobot arm
+```
+
+---
+
+## Stack
+
+- **Flutter** — iOS app with hold-to-record voice input
+- **Gemma 4 E2B** — converts voice transcripts to structured robot instructions, running locally via llama.cpp on a GCP T4 GPU
+- **Flask** — receives and saves instructions on laptop
+- **ACT (Action Chunking with Transformers)** — VLA policy that drives the arm
+- **LeRobot** — robot arm framework
+
+---
+
+## Setup
+
+### GCP VM (llama.cpp server)
+```bash
+/home/llama.cpp/build/bin/llama-server \
+  -m /home/models/google_gemma-4-E2B-it-Q4_K_M.gguf \
+  --port 8080 \
+  --host 0.0.0.0
+```
+
+### Laptop (Flask server)
+```bash
+cd gemmahack
+python3 server.py
+```
+
+### Flutter app
+Add a `.env` file to `gemmaflutter/` with:
+```
+VM_EXTERNAL_IP=your_gcp_ip
+LOCAL_IP=your_laptop_ip
+```
+Then run via Xcode on iPhone.
+
+---
+
+## Target Demo Task
+Opening a pill bottle using only a voice command.
