@@ -45,6 +45,7 @@ VM_EXTERNAL_IP=your_gcp_ip
 LOCAL_IP=your_laptop_ip
 ```
 Then run via Xcode on iPhone.
+You need to install Xcode
 
 ---
 
