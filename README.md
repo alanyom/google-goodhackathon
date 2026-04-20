@@ -30,6 +30,7 @@ iPhone (voice) → speech_to_text → Gemma 4 E2B via llama.cpp (GCP T4) → JSO
   --port 8080 \
   --host 0.0.0.0
 ```
+Immma have this running for the next week or two
 
 ### Laptop (Flask server)
 ```bash
@@ -47,5 +48,3 @@ Then run via Xcode on iPhone.
 
 ---
 
-## Target Demo Task
-Opening a pill bottle using only a voice command.
