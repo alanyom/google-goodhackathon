@@ -4,7 +4,7 @@
 
 ## Pipeline
 
-```bash
+```
 iPhone (voice) → speech_to_text → Gemma 4 E2B via llama.cpp (GCP T4) → JSON → Flask server → ACT VLA policy → LeRobot arm
 (Replace with cool visual later)
 ```
