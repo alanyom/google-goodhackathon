@@ -1,5 +1,8 @@
 .env
 
+# install separately
+llama.cpp/
+
 # Saved robot instructions
 output/
 instruction_*.json
@@ -26,30 +29,3 @@ build/
 
 # macOS
 .DS_Store
-
-# Python eggs / build artifacts
-*.egg-info/
-*.egg
-dist/
-*.pyc
-
-# macOS extended attributes
-__MACOSX/
-
-# Xcode / iOS build artifacts
-*.xcuserstate
-xcuserdata/
-*.xcworkspace/xcuserdata/
-DerivedData/
-
-# CocoaPods (macOS Flutter)
-Pods/
-*.xcworkspace
-!*.xcworkspace/contents.xcworkspacedata
-
-# Flutter - additional
-flutter_export_environment.sh
-
-# Logs
-*.log
-activity.log
