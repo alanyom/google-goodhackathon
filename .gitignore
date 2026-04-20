@@ -1,0 +1,28 @@
+.env
+
+# install separately
+llama.cpp/
+
+# Saved robot instructions
+output/
+instruction_*.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+*.iml
+.idea/
+
+# Models
+*.gguf
+
+# macOS
+.DS_Store
