@@ -53,3 +53,5 @@ flutter_export_environment.sh
 # Logs
 *.log
 activity.log
+
+random_commits.sh
