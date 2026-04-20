@@ -5,7 +5,7 @@
 ## Pipeline
 
 ```
-iPhone (voice) → speech_to_text → Gemma 4 E2B via llama.cpp (GCP T4) → JSON → Flask server → ACT VLA policy → LeRobot arm
+iPhone (voice) → speech_to_text → Gemma 4 E2B via llama.cpp (GCP T4) → JSON → Flask server → Octo VLA policy (Probably a pretrained one cuz im not trying to train manually) → LeRobot arm
 (Replace with cool visual later)
 ```
 
@@ -16,7 +16,7 @@ iPhone (voice) → speech_to_text → Gemma 4 E2B via llama.cpp (GCP T4) → JSO
 - **Flutter** — iOS app with hold-to-record voice input
 - **Gemma 4 E2B** — converts voice transcripts to structured robot instructions, running locally via llama.cpp on a GCP T4 GPU
 - **Flask** — receives and saves instructions on laptop
-- **ACT** - VLA
+- **Octo** - VLA
 - **LeRobot** — robot arm framework
 
 ---
