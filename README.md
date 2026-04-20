@@ -1,15 +1,12 @@
 # Gemma Kinetic
 
-A voice-controlled robot arm assistant for people who are blind, elderly, or physically impaired. Speak a command into your phone and the robot arm does it — no hands or screen required.
-
-Built for the **Gemma 4 Good Hackathon** (llama.cpp track + Health & Sciences track).
-
 ---
 
 ## Pipeline
 
 ```
 iPhone (voice) → speech_to_text → Gemma 4 E2B via llama.cpp (GCP T4) → JSON → Flask server → ACT VLA policy → LeRobot arm
+(Replace with cool visual later)
 ```
 
 ---
