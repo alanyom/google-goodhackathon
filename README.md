@@ -4,10 +4,10 @@
 
 ## Pipeline
 
-```
+
 iPhone (voice) → speech_to_text → Gemma 4 E2B via llama.cpp (GCP T4) → JSON → Flask server → SmolVLA policy (better vla for lerobot arms and cuz im not trying to train manually) → LeRobot arm
 (Replace with cool visual later)
-```
+
 
 ---
 
