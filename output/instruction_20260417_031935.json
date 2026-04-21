@@ -1,0 +1,4 @@
+{
+  "instruction": "{\n  \"action\": \"pick_up\",\n  \"target\": \"pill_bottle\"\n}",
+  "transcript": "Pick up the pill bottle"
+}
