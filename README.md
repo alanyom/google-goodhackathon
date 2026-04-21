@@ -20,7 +20,7 @@ iPhone (voice) → speech_to_text → Gemma 4 E2B via llama.cpp (GCP T4) → JSO
 - **SmolVLA** - VLA
 - **LeRobot** — robot arm framework
 
----
+--- 
 
 ## Setup
 
