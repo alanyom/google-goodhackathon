@@ -1,6 +1,7 @@
 # Gemma Kinetic
 
 Voice-Controlled Assistive Robotics via llama.cpp
+
 Giving elderly and disabled users a natural language interface to a robotic arm, powered entirely by Gemma 4 running on a T4 GPU via llama.cpp.
 ---
 
