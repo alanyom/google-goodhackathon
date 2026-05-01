@@ -44,7 +44,9 @@ Each of these required deliberate design choices rather than off-the-shelf integ
 ## Architecture
 
 The pipeline is straightforward by design:
+
 iPhone → Speech-to-text → Gemma 4 E2B → Database → SmolVLA → LeRobot arm
+
 A Flutter iOS app captures voice input via a hold-to-record button. Apple's native speech-to-text converts the audio to a transcript on-device, which is then sent to a Gemma 4 E2B model running via llama.cpp on a GCP T4 GPU VM. Gemma converts the natural language command into a structured JSON instruction. That instruction is persisted to a database and read by a bridge script that passes it to SmolVLA, which drives the LeRobot arm.
 
 ---
