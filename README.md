@@ -9,16 +9,6 @@ Giving elderly and disabled users a natural language interface to a robotic arm,
 
 ---
 
-## Stack
-
-- **Flutter** — iOS app with hold-to-record voice input
-- **Gemma 4 E2B** — converts voice transcripts to structured robot instructions via llama.cpp on a GCP T4 GPU
-- **Flask** — receives and saves instructions locally
-- **SmolVLA** — vision-language-action policy model for LeRobot arms
-- **LeRobot** — robot arm framework
-
----
-
 ## The Problem
 
 For elderly and disabled individuals, performing basic physical tasks like opening a pill bottle, picking up an object, or pressing a button can be a significant barrier to independence. Existing robotic assistants either require complex interfaces or depend on cloud AI that raises legitimate privacy concerns. A device that is always listening and sending data to a remote server is not something many people want in their bedroom or bathroom.
