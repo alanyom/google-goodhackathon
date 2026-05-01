@@ -41,6 +41,45 @@ Each of these required deliberate design choices rather than off-the-shelf integ
 
 ---
 
+## Architecture
+
+The pipeline is straightforward by design:
+iPhone → Speech-to-text → Gemma 4 E2B → Database → SmolVLA → LeRobot arm
+A Flutter iOS app captures voice input via a hold-to-record button. Apple's native speech-to-text converts the audio to a transcript on-device, which is then sent to a Gemma 4 E2B model running via llama.cpp on a GCP T4 GPU VM. Gemma converts the natural language command into a structured JSON instruction. That instruction is persisted to a database and read by a bridge script that passes it to SmolVLA, which drives the LeRobot arm.
+
+---
+
+## How Gemma 4 Is Used
+
+Gemma 4 E2B handles two distinct roles in the pipeline.
+Structured output generation. The primary role is converting a free-form voice transcript into a JSON command with three fields: task_description, object, and action. The system prompt instructs Gemma to respond with valid JSON only, no markdown, no explanation, making the output directly parseable and passable to the robot control layer. A low temperature setting of 0.2 keeps outputs consistent and deterministic, which matters when commanding hardware.
+
+A typical exchange:
+- Voice input: "Can you open the water bottle for me, the lid is pretty tight"
+- Gemma output:
+
+```
+json{
+  "task_description": "locate the water bottle, apply firm counterclockwise rotational force to unscrew the cap",
+  "object": "water bottle cap",
+  "action": "unscrew"
+}
+```
+
+This shows how Gemma interprets nuance. The user said "pretty tight" and Gemma translated that into "apply firm rotational force", encoding the physical constraint into the instruction without any explicit mapping.
+Multimodal scene understanding. The second role uses Gemma 4's native vision capability for the feedback loop described below.
+
+---
+
+## Why These Technical Choices
+Gemma 4 E2B over larger models. The E2B model hits a practical sweet spot: strong enough instruction following for reliable structured output, efficient enough to run quantized on a T4 without saturating the GPU, and natively multimodal so the same model handles both the text-to-JSON and vision feedback roles. A larger model would improve output quality marginally but would make deployment on accessible hardware significantly harder.
+
+llama.cpp over hosted inference. The privacy-first constraint is non-negotiable for the target use case. Elderly and disabled users in residential settings should not have their voice commands and camera feeds routed through a third-party API. llama.cpp makes on-premise inference practical without dedicated ML infrastructure.
+SmolVLA over manual policy training. Training a robot policy from scratch requires significant hardware, data collection time, and domain expertise. SmolVLA provides a capable pretrained base that accepts natural language task conditioning and integrates directly with Gemma's output format. Fine-tuning SmolVLA on task-specific demonstrations is the natural production path from here.
+Flutter for the mobile client. A single codebase targeting iOS natively, using platform speech recognition, and communicating via standard HTTP kept the mobile layer thin and the inference layer independent. The hold-to-record interaction pattern is also intentional: it avoids any always-listening behavior, consistent with the privacy design of the overall system.
+
+---
+
 ## Setup
 
 ### GCP VM (llama.cpp server)
