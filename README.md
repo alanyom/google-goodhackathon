@@ -1,7 +1,7 @@
 # Gemma Kinetic
 
-Voice-controlled assistive robotics powered by Gemma 4 running fully offline via llama.cpp.
-
+Voice-Controlled Assistive Robotics via llama.cpp
+Giving elderly and disabled users a natural language interface to a robotic arm, powered entirely by Gemma 4 running on a T4 GPU via llama.cpp.
 ---
 
 ## Pipeline
@@ -16,6 +16,13 @@ Voice-controlled assistive robotics powered by Gemma 4 running fully offline via
 - **Flask** — receives and saves instructions locally
 - **SmolVLA** — vision-language-action policy model for LeRobot arms
 - **LeRobot** — robot arm framework
+
+---
+
+##The Problem
+
+For elderly and disabled individuals, performing basic physical tasks like opening a pill bottle, picking up an object, or pressing a button can be a significant barrier to independence. Existing robotic assistants either require complex interfaces or depend on cloud AI that raises legitimate privacy concerns. A device that is always listening and sending data to a remote server is not something many people want in their bedroom or bathroom.
+Gemma Kinetic is a voice-controlled robotic arm assistant that is private by design. All AI inference runs on hardware the user controls. No audio, no video, and no commands leave the system unless explicitly configured to do so.
 
 ---
 
