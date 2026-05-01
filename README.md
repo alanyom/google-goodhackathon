@@ -5,7 +5,7 @@ Voice-controlled assistive robotics powered by Gemma 4 running fully offline via
 ---
 
 ## Pipeline
-![Pipeline](pipeline.svg)
+![Pipeline](pipeline.svg) 
 
 ---
 
