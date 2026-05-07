@@ -44,7 +44,7 @@ This shows how Gemma interprets nuance. The user said "pretty tight" and Gemma t
 Multimodal scene understanding. The second role uses Gemma 4's native vision capability for the feedback loop described below.
 
 # Simulation
-![Pipeline](sim.png)  
+![Pipeline](sim.png)   
 
 ---
 
