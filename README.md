@@ -45,7 +45,7 @@ Multimodal scene understanding. The second role uses Gemma 4's native vision cap
 
 # Simulation
 
-![Simulation](sim.png)   
+![Simulation](sim2.png)   
 ---
 
 ## Why These Technical Choices
