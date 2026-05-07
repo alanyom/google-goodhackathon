@@ -43,6 +43,9 @@ json{
 This shows how Gemma interprets nuance. The user said "pretty tight" and Gemma translated that into "apply firm rotational force", encoding the physical constraint into the instruction without any explicit mapping.
 Multimodal scene understanding. The second role uses Gemma 4's native vision capability for the feedback loop described below.
 
+# Simulation
+![Pipeline](sim.png)  
+
 ---
 
 ## Why These Technical Choices
