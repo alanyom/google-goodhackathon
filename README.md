@@ -5,7 +5,7 @@
      
   
 ## Pipeline
-![Pipeline](googleflow.svg) 
+![Pipeline](googleflow.svg)  
  
 ---
 
