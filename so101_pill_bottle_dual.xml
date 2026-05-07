@@ -1,0 +1,204 @@
+<mujoco model="so101_pill_bottle_dual">
+  <visual>
+    <global offwidth="1280" offheight="480"/>
+  </visual>
+  <!--
+    Right arm (arm 1) — removes cap
+      Base: pos="0.20 0.13 0.05"   ← set INSIDE so101_new_calib.xml
+      Mocap target : mocap_target  (welds to "wrist")
+      Gripper      : ctrl[5]   open=+1 / close=-1
+
+    Left arm (arm 2) — stabilises bottle body
+      Base: pos="-0.20 0.13 0.05"
+      Mocap target : l_mocap_target  (welds to "l_wrist")
+      Gripper      : ctrl[11]  open=+1 / close=-1
+  -->
+
+  <include file="/home/alanyomedu/SO-ARM100/Simulation/SO101/so101_new_calib.xml"/>
+  <include file="/home/alanyomedu/SO-ARM100/Simulation/SO101/so101_left_calib.xml"/>
+
+  <!-- ─── Assets ─────────────────────────────────────────────────────── -->
+  <asset>
+    <material name="bottle_orange" rgba="0.90 0.45 0.10 1"/>
+    <material name="cap_white"     rgba="0.93 0.93 0.93 1"/>
+    <material name="table_mat"     rgba="0.52 0.40 0.30 1"/>
+  </asset>
+
+  <!-- ─── Equality connects ────────────────────────────────────────────
+       connect (position-only) to "gripper" / "l_gripper" so the mocap
+       sphere sits at the gripper jaw rather than the wrist joint.
+       Orientation is left free — wrist_roll is still driven by the
+       position controller without fighting the constraint.
+       Both anchors zeroed in Python (configure_welds) so the constraint
+       simply enforces  gripper_origin == mocap_target_origin.
+  ──────────────────────────────────────────────────────────────────── -->
+  <equality>
+    <connect name="arm1_mocap_weld"
+             body1="mocap_target"
+             body2="gripper"
+             anchor="0 0 0"
+             solref="0.02 1"
+             solimp="0.9 0.95 0.001"/>
+    <connect name="arm2_mocap_weld"
+             body1="l_mocap_target"
+             body2="l_gripper"
+             anchor="0 0 0"
+             solref="0.02 1"
+             solimp="0.9 0.95 0.001"/>
+  </equality>
+
+  <!-- ─── World ───────────────────────────────────────────────────────── -->
+  <worldbody>
+
+    <light name="main_light" pos="0 0.4 1.5" dir="0 0 -1" diffuse="0.8 0.8 0.8" specular="0.2 0.2 0.2" directional="true"/>
+
+    <!--
+      Table surface
+        X half-width : 0.35  → x = -0.35 … +0.35
+        Y half-depth : 0.25  → y = 0.17  … 0.67
+        Top surface  : Z = 0.02
+    -->
+    <geom name="table_surface"
+          type="box" size="0.40 0.30 0.02"
+          pos="0.00 0.42 0.0"
+          material="table_mat"
+          friction="1.2 0.005 0.0001"
+          contype="1" conaffinity="1"/>
+
+    <!--
+      FIX 2: Table legs at TRUE corners.
+        x = ±0.35  (matches table half-width exactly)
+        y = 0.17   (near edge: 0.42 - 0.25)
+        y = 0.67   (far  edge: 0.42 + 0.25)
+        Leg half-height = 0.18  → centre Z = -0.18 (top flush with table bottom)
+    -->
+    <geom name="leg_fl" type="cylinder" size="0.020 0.18" pos="-0.37 0.17 -0.18"
+          rgba="0.35 0.25 0.18 1" contype="0" conaffinity="0"/>
+    <geom name="leg_fr" type="cylinder" size="0.020 0.18" pos=" 0.37 0.17 -0.18"
+          rgba="0.35 0.25 0.18 1" contype="0" conaffinity="0"/>
+    <geom name="leg_bl" type="cylinder" size="0.020 0.18" pos="-0.37 0.67 -0.18"
+          rgba="0.35 0.25 0.18 1" contype="0" conaffinity="0"/>
+    <geom name="leg_br" type="cylinder" size="0.020 0.18" pos=" 0.37 0.67 -0.18"
+          rgba="0.35 0.25 0.18 1" contype="0" conaffinity="0"/>
+
+    <!-- ══ Arm 1 mocap target (right arm — cap removal) ══════════════ -->
+    <body name="mocap_target" mocap="true" pos="0.21827781 0.16618956 0.09178788">
+      <geom type="sphere" size="0.013" rgba="1 0.1 0.1 0.45"
+            contype="0" conaffinity="0"/>
+    </body>
+
+    <!-- ══ Arm 2 mocap target (left arm — bottle stabiliser) ═════════ -->
+    <body name="l_mocap_target" mocap="true" pos="-0.18172219 0.16618956 0.09178788">
+      <geom type="sphere" size="0.013" rgba="0.1 0.4 1 0.45"
+            contype="0" conaffinity="0"/>
+    </body>
+
+    <!-- ══ Pill bottle ═══════════════════════════════════════════════ -->
+    <body name="bottle" pos="0.00 0.44 0.062">
+      <freejoint name="bottle_joint"/>
+
+      <geom name="bottle_body"
+            type="cylinder" size="0.018 0.042"
+            material="bottle_orange"
+            mass="0.095"
+            friction="1.5 0.005 0.0001"
+            contype="1" conaffinity="1"/>
+
+      <geom name="bottle_label"
+            type="cylinder" size="0.0185 0.028"
+            pos="0 0 -0.008"
+            rgba="0.95 0.85 0.70 1"
+            mass="0.001"
+            contype="0" conaffinity="0"/>
+
+      <body name="cap" pos="0 0 0.055">
+        <joint name="cap_joint" type="slide" axis="0 0 1"
+               range="-0.006 0.042"
+               damping="40"
+               stiffness="8"
+               springref="0"/>
+        <geom name="cap_geom"
+              type="cylinder" size="0.020 0.013"
+              material="cap_white"
+              mass="0.015"
+              friction="1.8 0.005 0.0001"
+              contype="1" conaffinity="1"/>
+        <site name="cap_center" pos="0 0 0" size="0.005"/>
+      </body>
+
+    </body>
+
+    <!-- ══ Cameras ══════════════════════════════════════════════════ -->
+    <camera name="arm1_overhead"
+            pos="0.25 0.13 0.55"
+            xyaxes="1 0 0  0.000 0.872 0.465"
+            fovy="70"/>
+
+    <camera name="arm2_overhead"
+            pos="-0.25 0.13 0.55"
+            xyaxes="1 0 0  0.000 0.872 0.465"
+            fovy="70"/>
+
+    <camera name="overhead_cam"
+            pos="0.00 0.40 1.10"
+            xyaxes="1 0 0  0 1 0"
+            fovy="65"/>
+
+    <camera name="preview_cam"
+            pos="0.6  -0.05 0.45"
+            xyaxes="0.707 0.707 0  -0.30 0.30 0.905"
+            fovy="60"/>
+
+  </worldbody>
+
+  <!--
+  ─── Actuator indices ───────────────────────────────────────────────
+    ctrl[0]  shoulder_pan    (right)
+    ctrl[1]  shoulder_lift   (right)
+    ctrl[2]  elbow_flex      (right)
+    ctrl[3]  wrist_flex      (right)
+    ctrl[4]  wrist_roll      (right)
+    ctrl[5]  gripper         (right)   +1=open / -1=close
+    ctrl[6]  l_shoulder_pan  (left)
+    ctrl[7]  l_shoulder_lift (left)
+    ctrl[8]  l_elbow_flex    (left)
+    ctrl[9]  l_wrist_flex    (left)
+    ctrl[10] l_wrist_roll    (left)
+    ctrl[11] l_gripper       (left)    +1=open / -1=close
+  ─────────────────────────────────────────────────────────────────── -->
+
+  <!--
+    FIX 1: HOME KEYFRAME — shoulder_pan = 0 for both arms.
+    ─────────────────────────────────────────────────────
+    The arm base + shoulder body quats already bake in the forward
+    orientation.  Setting shoulder_pan=±π/2 was rotating the arms
+    90° sideways.  With pan=0:
+      • Right arm: shoulder_lift=-1.2 pitches the upper arm forward
+        over the table; elbow_flex=1.4 brings the forearm down;
+        wrist_flex=-0.3 levels the gripper.
+      • Left arm: mirror (shoulder_lift=-1.2, elbow_flex=1.4,
+        wrist_flex=-0.3). Both grippers open (=1.0).
+
+    qpos order (18 joints + 7 bottle DOF):
+      [0]  shoulder_pan      right  = 0.0
+      [1]  shoulder_lift     right  = -1.2
+      [2]  elbow_flex        right  =  1.4
+      [3]  wrist_flex        right  = -0.3
+      [4]  wrist_roll        right  =  0.0
+      [5]  gripper           right  =  1.0   (open)
+      [6]  l_shoulder_pan    left   =  0.0
+      [7]  l_shoulder_lift   left   = +1.2  (inverted vs right: euler 180 flip)
+      [8]  l_elbow_flex      left   = -1.4  (inverted vs right: euler 180 flip)
+      [9]  l_wrist_flex      left   = +0.3  (inverted vs right: euler 180 flip)
+      [10] l_wrist_roll      left   =  0.0
+      [11] l_gripper         left   =  1.0   (open)
+      [12..18] bottle freejoint (x y z qw qx qy qz)
+  -->
+  <keyframe>
+    <key name="home"
+      qpos="0.0  -1.5  1.5  -0.8  0.0  1.0
+            0.0  -1.5  1.5  -0.8  0.0  1.0
+            0.0  0.44  0.062  1.0  0.0  0.0  0.0"/>
+  </keyframe>
+
+</mujoco>
