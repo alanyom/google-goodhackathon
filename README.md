@@ -1,5 +1,5 @@
 # Gemma Kinetic
- 
+  
 ### Voice-Controlled Assistive Robotics powered by Gemma 4 via llama.cpp
  
 ---
